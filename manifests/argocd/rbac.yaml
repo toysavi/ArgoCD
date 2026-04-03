@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: ${NAMESPACE}
+data:
+  policy.csv: |
+    # Role definitions
+    g,ldap-admins,role:admin
+    g,ldap-devops,role:devops
+    g,ldap-developers,role:developer
+    g,ldap-readonly,role:readonly
+    g,ldap-infra,role:infra
+
+    # Default roles (optional)
+    p,role:admin,applications,*,*
+    p,role:devops,applications,create,*
+    p,role:devops,applications,sync,*
+    p,role:developer,applications,get,*
+    p,role:developer,applications,sync,own
+    p,role:readonly,applications,get,*
+    p,role:infra,clusters,get,*
+    p,role:infra,clusters,update,*
