@@ -91,6 +91,7 @@ These variables are used throughout the scripts and manifests for dynamic config
 ```
 git clone https://github.com/toysavi/ArgoCD.git /argocd
 chmod +x -R /argocd
+cd /argocd
 ```
 
 
