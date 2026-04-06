@@ -89,7 +89,7 @@ These variables are used throughout the scripts and manifests for dynamic config
 ## 5️⃣ Install / Deploy
 1. Download/Clone code
 ```
-clone https://github.com/toysavi/ArgoCD.git /argocd
+git clone https://github.com/toysavi/ArgoCD.git /argocd
 chmod +x -R /argocd
 ```
 
