@@ -87,7 +87,14 @@ K3S_TOKEN="mysecuretoken"
 These variables are used throughout the scripts and manifests for dynamic configuration.
 
 ## 5️⃣ Install / Deploy
-1. Make scripts executable
+1. Download/Clone code
+```
+clone https://github.com/toysavi/ArgoCD.git /argocd
+chmod +x -R /argocd
+```
+
+
+2. Make scripts executable
 ```
 chmod +x scripts/*.sh
 ./scripts/install.sh
