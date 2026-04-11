@@ -1,0 +1,20 @@
+# Traefik Helm values — managed via GitOps
+
+service:
+  type: LoadBalancer              # MetalLB assigns 10.0.200.114
+
+ports:
+  web:
+    redirectTo:
+      port: websecure             # http → https
+  websecure:
+    tls:
+      enabled: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

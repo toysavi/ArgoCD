@@ -1,0 +1,32 @@
+# ArgoCD Helm values — managed via GitOps
+# Bump chart version in apps/argocd-app.yaml for upgrades (rolling update via GUI)
+
+configs:
+  params:
+    server.insecure: true        # TLS terminated at Traefik
+
+server:
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: false               # We manage the Ingress separately
+
+# Resource limits — tune to your node size
+controller:
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+repoServer:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi

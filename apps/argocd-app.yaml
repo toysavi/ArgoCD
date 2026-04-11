@@ -1,0 +1,39 @@
+# ArgoCD self-manages its own Helm release via GitOps
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"          # deploy early
+spec:
+  project: default
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: "7.7.11"
+    helm:
+      valueFiles:
+      - $values/argocd/values.yaml             # pulls from same Git repo
+  sources:
+  - repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: "7.7.11"
+    helm:
+      valueFiles:
+      - $values/argocd/values.yaml
+  - repoURL: https://github.com/toysavi/ArgoCD.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true

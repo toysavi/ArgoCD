@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"          # Traefik first (infra)
+spec:
+  project: default
+  sources:
+  - repoURL: https://helm.traefik.io/traefik
+    chart: traefik
+    targetRevision: "33.2.1"
+    helm:
+      valueFiles:
+      - $values/traefik/values.yaml
+  - repoURL: https://github.com/toysavi/ArgoCD.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
