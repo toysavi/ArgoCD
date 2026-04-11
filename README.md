@@ -6,15 +6,10 @@
 apps/               ← Root app-of-apps (ArgoCD watches this)
   argocd-app.yaml   ← ArgoCD self-manages its own Helm release
   traefik-app.yaml  ← Traefik ingress controller
-  sample-app.yaml   ← Example workload
 argocd/
   values.yaml       ← ArgoCD Helm values
 traefik/
   values.yaml       ← Traefik Helm values
-sample-app/         ← Raw manifests for sample nginx workload
-  deployment.yaml
-  service.yaml
-  ingress.yaml
 ```
 
 ## Rolling Update Workflow
