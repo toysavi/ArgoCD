@@ -1,3 +1,0 @@
-server:
-  config:
-    url: https://argocd.example.com

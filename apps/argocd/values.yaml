@@ -1,7 +1,0 @@
-server:
-  service:
-    type: ClusterIP
-dex:
-  enabled: true
-redis:
-  enabled: true
