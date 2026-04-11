@@ -30,7 +30,7 @@ ARGOCD_NAMESPACE="argocd"
 TRAEFIK_NAMESPACE="traefik"
 CERT_DIR="/etc/khryma/certs"
 KUBECONFIG_PATH="/etc/rancher/k3s/k3s.yaml"
-GITOPS_REPO_URL="https://github.com/YOUR_ORG/gitops-repo"   # ← CHANGE THIS
+GITOPS_REPO_URL="https://github.com/toysavi/ArgoCD"   # ← CHANGE THIS
 
 # ── PATH bootstrap ────────────────────────────────────────────────────────────
 # k3s and Helm both install to /usr/local/bin — ensure it's in PATH
