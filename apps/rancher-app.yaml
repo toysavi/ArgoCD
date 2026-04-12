@@ -1,0 +1,59 @@
+# PATH: gitops-repo/apps/rancher-app.yaml
+# Deploys Rancher from the official public rancher-stable Helm repo.
+# To upgrade: change targetRevision, commit, push, then SYNC in ArgoCD GUI.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rancher
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"   # after cert-manager
+spec:
+  project: default
+  source:
+    repoURL: https://releases.rancher.com/server-charts/stable
+    chart: rancher
+    targetRevision: "2.13.3"            # ← bump this to upgrade Rancher
+    helm:
+      releaseName: rancher
+      values: |
+        hostname: rancher.khryma.com
+
+        # 1 for single-node k3s, 3 for HA
+        replicas: 1
+
+        # TLS terminated at Traefik — Rancher listens on HTTP internally
+        tls: external
+
+        # We manage Ingress separately in rancher-infra/
+        ingress:
+          enabled: false
+
+        # Leave empty — Rancher will show bootstrap instructions on first login
+        bootstrapPassword: ""
+
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: "2"
+            memory: 2Gi
+
+        # Uncomment if your cluster is behind a proxy
+        # proxy: http://proxy.example.com:3128
+        # noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cattle-system
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - Replace=true
+    # Enable auto-sync ONLY after verifying first manual sync is clean:
+    # automated:
+    #   prune: true
+    #   selfHeal: true

@@ -1,0 +1,28 @@
+# PATH: gitops-repo/rancher-infra/ingress.yaml
+# Traefik Ingress routing rancher.khryma.com → rancher service in cattle-system.
+# Shares MetalLB IP 10.0.200.114 with ArgoCD — routed by hostname.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rancher-ingress
+  namespace: cattle-system
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - rancher.khryma.com
+    secretName: rancher-tls           # issued by certificate.yaml above
+  rules:
+  - host: rancher.khryma.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rancher
+            port:
+              number: 80

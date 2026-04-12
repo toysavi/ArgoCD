@@ -1,3 +1,5 @@
+# PATH: gitops-repo/apps/traefik-app.yaml
+# Traefik ingress controller — sync wave 0, must exist before Rancher ingress.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -6,25 +8,34 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "0"          # Traefik first (infra)
+    argocd.argoproj.io/sync-wave: "0"   # first — infra layer
 spec:
   project: default
+  source:
+    repoURL: https://helm.traefik.io/traefik
+    chart: traefik
+    targetRevision: "33.2.1"            # bump to upgrade Traefik
+    helm:
+      releaseName: traefik
+      valueFiles:
+      - $values/traefik/values.yaml
   sources:
   - repoURL: https://helm.traefik.io/traefik
     chart: traefik
     targetRevision: "33.2.1"
     helm:
+      releaseName: traefik
       valueFiles:
       - $values/traefik/values.yaml
-  - repoURL: https://github.com/toysavi/ArgoCD.git
+  - repoURL: https://github.com/YOUR_ORG/gitops-repo.git   # ← your repo
     targetRevision: main
     ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: traefik
   syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-    - CreateNamespace=true

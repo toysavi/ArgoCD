@@ -1,0 +1,40 @@
+# PATH: gitops-repo/apps/cert-manager-app.yaml
+# cert-manager is required by Rancher for TLS certificate issuance.
+# Sync wave 1 — must be ready before Rancher (wave 2).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: cert-manager
+    targetRevision: "v1.16.3"           # bump here to upgrade cert-manager
+    helm:
+      releaseName: cert-manager
+      values: |
+        crds:
+          enabled: false                # CRDs applied separately by install.sh
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - Replace=true
+    automated:
+      prune: true
+      selfHeal: true

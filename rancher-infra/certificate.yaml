@@ -1,0 +1,19 @@
+# PATH: gitops-repo/rancher-infra/certificate.yaml
+# cert-manager Certificate for rancher.khryma.com
+# Signed by the self-signed CA from /etc/khryma/certs/ca.crt
+# cert-manager auto-renews 30 days before expiry.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rancher-tls
+  namespace: cattle-system
+spec:
+  secretName: rancher-tls             # Ingress references this secret name
+  issuerRef:
+    name: khryma-ca-issuer
+    kind: ClusterIssuer
+  commonName: rancher.khryma.com
+  dnsNames:
+  - rancher.khryma.com
+  duration: 87600h                    # 10 years
+  renewBefore: 720h                   # renew 30 days before expiry

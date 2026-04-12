@@ -1,0 +1,27 @@
+# PATH: gitops-repo/apps/rancher-ingress-app.yaml
+# Deploys the Traefik Ingress, ClusterIssuer and TLS Certificate for Rancher.
+# Raw manifests live in gitops-repo/rancher-infra/ — ArgoCD applies them directly.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rancher-ingress
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"   # after rancher pods are up
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/toysavi/ArgoCD.git   # ← your repo
+    targetRevision: main
+    path: rancher-infra                  # folder in THIS same repo
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cattle-system
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,16 @@
+# PATH: gitops-repo/rancher-infra/clusterissuer.yaml
+# cert-manager ClusterIssuer using your private CA from /etc/khryma/certs/
+#
+# Prereq: the secret 'khryma-ca-secret' must exist in cert-manager namespace.
+# It is created by install.sh:
+#   kubectl create secret tls khryma-ca-secret \
+#     -n cert-manager \
+#     --cert=/etc/khryma/certs/ca.crt \
+#     --key=/etc/khryma/certs/ca.key
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: khryma-ca-issuer
+spec:
+  ca:
+    secretName: khryma-ca-secret
