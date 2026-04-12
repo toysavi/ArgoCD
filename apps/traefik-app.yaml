@@ -27,7 +27,7 @@ spec:
       releaseName: traefik
       valueFiles:
       - $values/traefik/values.yaml
-  - repoURL: https://github.com/YOUR_ORG/gitops-repo.git   # ← your repo
+  - repoURL: https://github.com/toysavi/ArgoCD.git   # ← your repo
     targetRevision: main
     ref: values
   destination:
